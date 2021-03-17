@@ -1,10 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.action_chains import ActionChains
+from DriverInitialization import DriverInitialization
 import time
-
 
 
 class RunChrome:
@@ -13,11 +11,10 @@ class RunChrome:
         """
         test sequence 1
         """
-        # 1. driver initialization and opening Chrome Browser
-        driver = webdriver.Chrome('./chromedriver')
-        driver.maximize_window()
-        driver.implicitly_wait(10)
-        driver.get(link)
+
+        # 1. Driver Initialization
+        initialization_object = DriverInitialization
+        driver = initialization_object.Initialize(link)
 
         # 2. Going to Downloads -> All Releases
         download_menu = driver.find_element_by_xpath("//li[@id='downloads']/a")
@@ -29,17 +26,15 @@ class RunChrome:
         all_versions_xpath = "//ol[@class='list-row-container menu']/li/span[@class='release-number']/a"
         all_versions = driver.find_elements_by_xpath(all_versions_xpath)
         time.sleep(3)
-        print(all_versions[0].text)
+        print("The latest released version is : " + str(all_versions[0].text))
 
     def test2(self, link):
             """
             test sequence 1
             """
             # 1. driver initialization and opening Chrome Browser
-            driver = webdriver.Chrome('./chromedriver')
-            driver.maximize_window()
-            driver.implicitly_wait(10)
-            driver.get(link)
+            initialization_object = DriverInitialization
+            driver = initialization_object.Initialize(link)
 
             # 2. Search bar
             search_bar = driver.find_element_by_id("id-search-field")
@@ -48,6 +43,22 @@ class RunChrome:
             time.sleep(5)
 
             # 3. Open first result link
+            link_xpath = "//ul[@class='list-recent-events menu']//a[@href='/dev/peps/pep-0318/']"
+            link = driver.find_element_by_xpath(link_xpath)
+            link.click()
+
+            # 4. Select Examples
+            examples_link = driver.find_element_by_id("id80")
+            examples_link.click()
+
+            # 5. Verify current example count is 5
+            examples_list_xpath = "//div[@id='examples']/ol[@class='arabic']/li/p[@class='first']"
+            examples_list = driver.find_elements_by_xpath(examples_list_xpath)
+            if len(examples_list) == 5:
+                check = True
+            else:
+                check = False
+            print ("Are there 5 examples? " + str(check))
 
 
 
