@@ -28,6 +28,10 @@ class RunChrome:
         time.sleep(3)
         print("The latest released version is : " + str(all_versions[0].text))
 
+        # Extra 1 : decorator function to close drive
+        decorated_close = RunChrome.decorator_function(RunChrome.close_driver)
+        decorated_close(driver)
+
     def test2(self, link):
         """
         test sequence 1
