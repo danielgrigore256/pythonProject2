@@ -2,20 +2,29 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from DriverInitialization import DriverInitialization
-from Decorator import Decorator
 import time
 
 
+def decorated_close(test):
+    def wrapper(*args):
+        driver = test(*args)
+        driver.close()
+        print("driver closed")
+
+    return wrapper
+
 class RunChrome:
 
-    def test1(self, link):
+
+    @decorated_close
+    def test1(self):
         """
         test sequence 1
         """
 
         # 1. Driver Initialization
         initialization_object = DriverInitialization
-        driver = initialization_object.Initialize(link)
+        driver = initialization_object.Initialize("https://www.python.org/")
 
         # 2. Going to Downloads -> All Releases
         download_menu = driver.find_element_by_xpath("//li[@id='downloads']/a")
@@ -29,17 +38,16 @@ class RunChrome:
         time.sleep(3)
         print("The latest released version is : " + str(all_versions[0].text))
 
-        # Extra 1 : decorator function to close drive
-        decorated_close = Decorator.decorator_function(Decorator.close_driver)
-        decorated_close(driver)
+        return driver
 
-    def test2(self, link):
+    @decorated_close
+    def test2(self):
         """
         test sequence 1
          """
         # 1. driver initialization and opening Chrome Browser
         initialization_object = DriverInitialization
-        driver = initialization_object.Initialize(link)
+        driver = initialization_object.Initialize("https://www.python.org/")
 
         # 2. Search bar
         search_bar = driver.find_element_by_id("id-search-field")
@@ -64,12 +72,8 @@ class RunChrome:
         else:
             check = False
         print("Are there 5 examples? " + str(check))
-
-        # Extra 1 : decorator function to close drive
-        decorated_close = Decorator.decorator_function(Decorator.close_driver)
-        decorated_close(driver)
-
+        return driver
 
 
 chromeTest = RunChrome()
-chromeTest.test2("https://www.python.org/")
+chromeTest.test1()
