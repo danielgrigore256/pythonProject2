@@ -7,7 +7,7 @@ import time
 
 class RunChrome:
 
-    def test1(self,link):
+    def test1(self, link):
         """
         test sequence 1
         """
@@ -29,40 +29,56 @@ class RunChrome:
         print("The latest released version is : " + str(all_versions[0].text))
 
     def test2(self, link):
-            """
-            test sequence 1
-            """
-            # 1. driver initialization and opening Chrome Browser
-            initialization_object = DriverInitialization
-            driver = initialization_object.Initialize(link)
+        """
+        test sequence 1
+         """
+        # 1. driver initialization and opening Chrome Browser
+        initialization_object = DriverInitialization
+        driver = initialization_object.Initialize(link)
 
-            # 2. Search bar
-            search_bar = driver.find_element_by_id("id-search-field")
-            search_bar.send_keys("decorator")
-            search_bar.send_keys(Keys.RETURN)
-            time.sleep(5)
+        # 2. Search bar
+        search_bar = driver.find_element_by_id("id-search-field")
+        search_bar.send_keys("decorator")
+        search_bar.send_keys(Keys.RETURN)
+        time.sleep(5)
 
-            # 3. Open first result link
-            link_xpath = "//ul[@class='list-recent-events menu']//a[@href='/dev/peps/pep-0318/']"
-            link = driver.find_element_by_xpath(link_xpath)
-            link.click()
+        # 3. Open first result link
+        link_xpath = "//ul[@class='list-recent-events menu']//a[@href='/dev/peps/pep-0318/']"
+        link = driver.find_element_by_xpath(link_xpath)
+        link.click()
 
-            # 4. Select Examples
-            examples_link = driver.find_element_by_id("id80")
-            examples_link.click()
+        # 4. Select Examples
+        examples_link = driver.find_element_by_id("id80")
+        examples_link.click()
 
-            # 5. Verify current example count is 5
-            examples_list_xpath = "//div[@id='examples']/ol[@class='arabic']/li/p[@class='first']"
-            examples_list = driver.find_elements_by_xpath(examples_list_xpath)
-            if len(examples_list) == 5:
-                check = True
-            else:
-                check = False
-            print ("Are there 5 examples? " + str(check))
+        # 5. Verify current example count is 5
+        examples_list_xpath = "//div[@id='examples']/ol[@class='arabic']/li/p[@class='first']"
+        examples_list = driver.find_elements_by_xpath(examples_list_xpath)
+        if len(examples_list) == 5:
+            check = True
+        else:
+            check = False
+        print("Are there 5 examples? " + str(check))
 
+        # Extra 1 : decorator function to close drive
+        decorated_close = RunChrome.decorator_function(RunChrome.close_driver)
+        decorated_close(driver)
 
+    def decorator_function(original_function):
+        """
+        :parameter original_function : function u want to decorate
+        :return: stores into a variable the given function
+        """
+        def wrapper_function():
+            return original_function
+        return wrapper_function()
 
-
+    def close_driver(driver):
+        """
+        function to close the webdriver
+        :return: None
+        """
+        driver.close()
 
 chromeTest = RunChrome()
-chromeTest.test1("https://www.python.org/")
+chromeTest.test2("https://www.python.org/")
