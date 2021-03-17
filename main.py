@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from DriverInitialization import DriverInitialization
+from Decorator import Decorator
 import time
 
 
@@ -29,7 +30,7 @@ class RunChrome:
         print("The latest released version is : " + str(all_versions[0].text))
 
         # Extra 1 : decorator function to close drive
-        decorated_close = RunChrome.decorator_function(RunChrome.close_driver)
+        decorated_close = Decorator.decorator_function(Decorator.close_driver)
         decorated_close(driver)
 
     def test2(self, link):
@@ -65,24 +66,10 @@ class RunChrome:
         print("Are there 5 examples? " + str(check))
 
         # Extra 1 : decorator function to close drive
-        decorated_close = RunChrome.decorator_function(RunChrome.close_driver)
+        decorated_close = Decorator.decorator_function(Decorator.close_driver)
         decorated_close(driver)
 
-    def decorator_function(original_function):
-        """
-        :parameter original_function : function u want to decorate
-        :return: stores into a variable the given function
-        """
-        def wrapper_function():
-            return original_function
-        return wrapper_function()
 
-    def close_driver(driver):
-        """
-        function to close the webdriver
-        :return: None
-        """
-        driver.close()
 
 chromeTest = RunChrome()
 chromeTest.test2("https://www.python.org/")
