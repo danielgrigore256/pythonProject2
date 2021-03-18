@@ -1,7 +1,11 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
+
 from DriverInitialization import DriverInitialization
+from main_page import main_page
+from releases_page import releases_page
+from python_search_page import python_search_page
+from decorators_page import decorators_page
 import time
 
 
@@ -13,8 +17,8 @@ def decorated_close(test):
 
     return wrapper
 
-class RunChrome:
 
+class RunChrome:
 
     @decorated_close
     def test1(self):
@@ -27,16 +31,10 @@ class RunChrome:
         driver = initialization_object.Initialize("https://www.python.org/")
 
         # 2. Going to Downloads -> All Releases
-        download_menu = driver.find_element_by_xpath("//li[@id='downloads']/a")
-        all_releases_xpath = "//li[@id='downloads']/ul[@role='menu']/li[@class='tier-2 element-1']/a"
-        all_releases_submenu = driver.find_element_by_xpath(all_releases_xpath)
-        ActionChains(driver).move_to_element(download_menu).click(all_releases_submenu).perform()
+        driver = main_page.go_to_all_releases(driver)
 
         # 3. Printing the last version of python
-        all_versions_xpath = "//ol[@class='list-row-container menu']/li/span[@class='release-number']/a"
-        all_versions = driver.find_elements_by_xpath(all_versions_xpath)
-        time.sleep(3)
-        print("The latest released version is : " + str(all_versions[0].text))
+        driver = releases_page.display_last_release(driver)
 
         return driver
 
@@ -50,30 +48,19 @@ class RunChrome:
         driver = initialization_object.Initialize("https://www.python.org/")
 
         # 2. Search bar
-        search_bar = driver.find_element_by_id("id-search-field")
-        search_bar.send_keys("decorator")
-        search_bar.send_keys(Keys.RETURN)
-        time.sleep(5)
+        driver = main_page.search_bar(driver, "decorator")
 
         # 3. Open first result link
-        link_xpath = "//ul[@class='list-recent-events menu']//a[@href='/dev/peps/pep-0318/']"
-        link = driver.find_element_by_xpath(link_xpath)
-        link.click()
+        driver = python_search_page.click_on_first_result(driver)
 
         # 4. Select Examples
-        examples_link = driver.find_element_by_id("id80")
-        examples_link.click()
+        driver = decorators_page.select_examples(driver)
 
         # 5. Verify current example count is 5
-        examples_list_xpath = "//div[@id='examples']/ol[@class='arabic']/li/p[@class='first']"
-        examples_list = driver.find_elements_by_xpath(examples_list_xpath)
-        if len(examples_list) == 5:
-            check = True
-        else:
-            check = False
-        print("Are there 5 examples? " + str(check))
+        driver = decorators_page.verify_examples_count(driver)
+
         return driver
 
 
 chromeTest = RunChrome()
-chromeTest.test1()
+chromeTest.test2()

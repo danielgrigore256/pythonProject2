@@ -1,5 +1,6 @@
 from selenium import webdriver
 
+
 class DriverInitialization():
     Instance = None
 
