@@ -2,17 +2,17 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 from DriverInitialization import DriverInitialization
-from main_page import main_page
-from releases_page import releases_page
-from python_search_page import python_search_page
-from decorators_page import decorators_page
+from MainPage import MainPage
+from ReleasesPage import ReleasesPage
+from SearchPage import SearchPage
+from DecoratorsPage import DecoratorsPage
 import time
 
 
 def decorated_close(test):
     def wrapper(*args):
         driver = test(*args)
-        driver.close()
+        driver.driver.close()
         print("driver closed")
 
     return wrapper
@@ -31,12 +31,14 @@ class RunChrome:
         driver = initialization_object.Initialize("https://www.python.org/")
 
         # 2. Going to Downloads -> All Releases
-        driver = main_page.go_to_all_releases(driver)
+
+        driver = MainPage(driver)
+        driver.go_to_all_releases()
 
         # 3. Printing the last version of python
-        driver = releases_page.display_last_release(driver)
-
-        return driver
+        driver = ReleasesPage(driver)
+        driver.display_last_release
+        return driver.driver
 
     @decorated_close
     def test2(self):
@@ -48,18 +50,20 @@ class RunChrome:
         driver = initialization_object.Initialize("https://www.python.org/")
 
         # 2. Search bar
-        driver = main_page.search_bar(driver, "decorator")
+        main_page_driver = MainPage(driver)
+        main_page_driver.search_bar()
 
         # 3. Open first result link
-        driver = python_search_page.click_on_first_result(driver)
+        search_page_driver = SearchPage(main_page_driver.driver)
+        search_page_driver.click_on_first_result()
 
         # 4. Select Examples
-        driver = decorators_page.select_examples(driver)
-
+        decorator_page_driver = DecoratorsPage(search_page_driver.driver)
+        decorator_page_driver.select_examples()
         # 5. Verify current example count is 5
-        driver = decorators_page.verify_examples_count(driver)
+        decorator_page_driver.verify_examples_count()
 
-        return driver
+        return decorator_page_driver
 
 
 chromeTest = RunChrome()
