@@ -22,7 +22,7 @@ class MainPage():
         ActionChains(self.driver).move_to_element(download_menu).click(all_releases_submenu).perform()
 
 
-    def search_bar(self):
+    def use_search_bar(self):
         """
         (TEST2) Function to use python.org search bar in order to write something and display results
         :return: moving to python_search_page with the display of results searched

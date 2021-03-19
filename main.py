@@ -28,7 +28,7 @@ class RunChrome:
 
         # 1. Driver Initialization
         initialization_object = DriverInitialization
-        driver = initialization_object.Initialize("https://www.python.org/")
+        driver = initialization_object.initialize_driver("https://www.python.org/")
 
         # 2. Going to Downloads -> All Releases
 
@@ -47,11 +47,11 @@ class RunChrome:
          """
         # 1. driver initialization and opening Chrome Browser
         initialization_object = DriverInitialization
-        driver = initialization_object.Initialize("https://www.python.org/")
+        driver = initialization_object.initialize_driver("https://www.python.org/")
 
         # 2. Search bar
         main_page_driver = MainPage(driver)
-        main_page_driver.search_bar()
+        main_page_driver.use_search_bar()
 
         # 3. Open first result link
         search_page_driver = SearchPage(main_page_driver.driver)
